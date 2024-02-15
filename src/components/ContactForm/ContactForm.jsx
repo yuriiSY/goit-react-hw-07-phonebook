@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { addContact } from '../../redux/contacts/contacts-slice';
-import { getFilteredContacts } from '../../redux/contacts/contacts-selectors';
+import { useDispatch } from 'react-redux';
+import { addContacts } from '../../redux/contacts/contacts-operartion';
 
 import { nanoid } from 'nanoid';
 import css from './contactForm.module.css';
@@ -12,7 +11,6 @@ const INITIAL_STATE = {
 };
 
 const ContactForm = () => {
-  const contacts = useSelector(getFilteredContacts);
   const dispatch = useDispatch();
 
   const [constact, setContact] = useState({
@@ -33,26 +31,9 @@ const ContactForm = () => {
     });
   };
 
-  const isDuplicate = ({ name }) => {
-    const nameNormalized = name.toLowerCase();
-
-    const duplicate = contacts.find(item => {
-      const currentNameNormalize = item.name.toLowerCase();
-      return currentNameNormalize === nameNormalized;
-    });
-
-    return Boolean(duplicate);
-  };
-
   const onAddContact = e => {
     e.preventDefault();
-
-    if (isDuplicate(constact)) {
-      return alert(`${constact.name} is already in contacts`);
-    }
-
-    const action = addContact(constact);
-    dispatch(action);
+    dispatch(addContacts(constact));
     reset();
   };
 
